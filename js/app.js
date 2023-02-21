@@ -16,9 +16,10 @@ let board, turn, winner, tie;
 /*------------------------ Cached Element References ------------------------*/
 const squareEls = document.querySelectorAll('.sqr');
 const messageEls = document.getElementById('message');
-const resetBtnEl = document.querySelector('#reset');
+const resetBtnEl = document.getElementById('reset');
 const boardEl = document.querySelector('.board');
 /*----------------------------- Event Listeners -----------------------------*/
+init();
 boardEl.addEventListener('click', handleClick);
 resetBtnEl.addEventListener('click', init);
 /*-------------------------------- Functions --------------------------------*/
@@ -38,15 +39,15 @@ function placePiece(idx) {
     board[idx] = turn;
 }
 function updateBoard() {
-    board.forEach((boardVal, idx) => {
-        if (boardVal === 1) {
-            squareEls[idx].textContent = '🐈';
+    squareEls.forEach((square, idx) => {
+        if (board[idx] === 1) {
+            square.textContent = '🐈';
         }
-        else if (boardVal === -1) {
-            squareEls[idx].textContent = '🐈‍⬛';
+        else if (board[idx] === -1) {
+            square.textContent = '🐈‍⬛';
         }
-        else {
-            squareEls[idx].textContent = '';
+        else if (board[idx] === 0) {
+            square.textContent = '';
         }
     });
 }
@@ -58,38 +59,45 @@ function updateMessage() {
         messageEls.textContent = 'Tie Game aka cats game Mee-OWW 😸';
     }
     else {
-        messageEls.textContent = `Congratulations! ${turn === 1 ? '🐈' : '🐈‍⬛'} wins! `;
+        messageEls.textContent = `Congratulations! ${turn === 1 ? '🐈' : '🐈‍⬛'} wins 🎉! `;
     }
     messageEls.classList.add('animate__animated', 'animate__heartBeat');
 }
 // I HAVE NO IDEA HOW TO DO THIS //Figured it out
 function handleClick(evt) {
-    const target = evt.target;
-    if (!target)
+    if (!(evt.target instanceof HTMLElement))
         return;
-    const sqrIdx = parseInt(target.id.replace('sqr', ''));
-    if (isNaN(sqrIdx) || board[sqrIdx] || winner)
+    if (evt.target.textContent !== '')
         return;
-    placePiece(sqrIdx);
+    if (winner === true || tie === true)
+        return;
+    let sqIdx = parseInt(evt.target.id.slice(2));
+    // console.log(evt.target.id)
+    placePiece(sqIdx);
     checkForTie();
     checkForWinner();
     switchPlayerTurn();
     render();
 }
 function checkForTie() {
-    if (board.includes(0))
-        return;
-    tie = true;
+    if (!board.includes(0)) {
+        tie = true;
+    }
 }
 function checkForWinner() {
     winningCombos.forEach(combo => {
-        if (Math.abs(board[combo[1]] + board[combo[2]]) === 3) {
-            winner = true;
-        }
+        let total = 0;
+        combo.forEach(position => {
+            total += board[position];
+            if (Math.abs(total) === 3) {
+                winner = true;
+                return;
+            }
+        });
     });
 }
 function switchPlayerTurn() {
-    if (winner)
+    if (winner === true || tie === true)
         return;
     turn *= -1;
 }
