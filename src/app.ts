@@ -10,8 +10,15 @@ const winningCombos: number [][] = [
   [0, 4, 8], //L-R diagonal
   [2, 4, 6], //R-L diagonal
 ]
+
 /*---------------------------- Variables (state) ----------------------------*/
 //  Define the required variables used to track the state of the game
 let board: Array<number | null>, turn: number, winner: boolean ,tie: boolean
 
 /*------------------------ Cached Element References ------------------------*/
+
+const squareEls = document.querySelectorAll('.sqr')
+const messageEls = document.getElementById('message')
+const resetBtnEl = document.querySelector<HTMLButtonElement>('#reset')!
+
+/*----------------------------- Event Listeners -----------------------------*/

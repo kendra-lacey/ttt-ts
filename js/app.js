@@ -14,3 +14,7 @@ const winningCombos = [
 //  Define the required variables used to track the state of the game
 let board, turn, winner, tie;
 /*------------------------ Cached Element References ------------------------*/
+const squareEls = document.querySelectorAll('.sqr');
+const messageEls = document.getElementById('message');
+const resetBtnEl = document.querySelector('#reset');
+/*----------------------------- Event Listeners -----------------------------*/
