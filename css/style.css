@@ -1,5 +1,5 @@
 body {
-  background:linear-gradient(#e66465, #9198e5) ;
+background-image: url(../images/background.png);
 /* Use a system font, if none are available use an available sans-sarif   font */
 font-family: 'Secular One', sans-serif;
 color: #9FE2BF;
