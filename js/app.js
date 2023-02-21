@@ -17,10 +17,10 @@ let board, turn, winner, tie;
 const squareEls = document.querySelectorAll('.sqr');
 const messageEls = document.getElementById('message');
 const resetBtnEl = document.querySelector('#reset');
-const gameBoard = document.querySelector('.board');
+const boardEl = document.querySelector('.board');
 /*----------------------------- Event Listeners -----------------------------*/
-gameBoard?.addEventListener('click', handleClick);
-resetBtnEl?.addEventListener('click', init);
+boardEl.addEventListener('click', handleClick);
+resetBtnEl.addEventListener('click', init);
 /*-------------------------------- Functions --------------------------------*/
 function init() {
     board = [0, 0, 0, 0, 0, 0, 0, 0, 0,];
@@ -28,6 +28,11 @@ function init() {
     winner = false;
     tie = false;
     render();
+}
+function render() {
+    updateBoard();
+    messageEls.classList.remove('animate__animated', 'animate__heartBeat');
+    updateMessage();
 }
 function placePiece(idx) {
     board[idx] = turn;
@@ -57,26 +62,15 @@ function updateMessage() {
     }
     messageEls.classList.add('animate__animated', 'animate__heartBeat');
 }
-// I HAVE NO IDEA HOW TO DO THIS 
-// function handleClick(evt: MouseEvent): void {
-//   const target = evt.target as HTMLElement
-//   if (!target) return
-//   const sqIdx: number = parseInt(target.id.replace('sq', ''))
-//   if (isNaN(sqIdx) || board[sqIdx] || winner) return
-//   placePiece(sqIdx)
-//   checkForTie()
-//   checkForWinner()
-//   switchPlayerTurn()
-//   render()
-// }
+// I HAVE NO IDEA HOW TO DO THIS //Figured it out
 function handleClick(evt) {
-    if (!evt.target)
-        return;
     const target = evt.target;
-    const sqIdx = parseInt(target.id.replace('sq', ''));
-    if (isNaN(sqIdx) || board[sqIdx] || winner)
+    if (!target)
         return;
-    placePiece(sqIdx);
+    const sqrIdx = parseInt(target.id.replace('sqr', ''));
+    if (isNaN(sqrIdx) || board[sqrIdx] || winner)
+        return;
+    placePiece(sqrIdx);
     checkForTie();
     checkForWinner();
     switchPlayerTurn();
@@ -98,9 +92,4 @@ function switchPlayerTurn() {
     if (winner)
         return;
     turn *= -1;
-}
-function render() {
-    updateBoard();
-    messageEls.classList.remove('animate__animated', 'animate__heartBeat');
-    updateMessage();
 }

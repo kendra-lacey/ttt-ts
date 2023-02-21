@@ -21,13 +21,13 @@ tie: boolean
 /*------------------------ Cached Element References ------------------------*/
 
 const squareEls = document.querySelectorAll('.sqr')
-const messageEls = document.getElementById('message')
+const messageEls = document.getElementById('message')!
 const resetBtnEl = document.querySelector<HTMLButtonElement>('#reset')!
-const gameBoard = document.querySelector('.board')
+const boardEl = document.querySelector<HTMLElement>('.board')!
 
 /*----------------------------- Event Listeners -----------------------------*/
-gameBoard?.addEventListener('click', handleClick)
-resetBtnEl?.addEventListener('click',init)
+boardEl.addEventListener('click', handleClick)
+resetBtnEl.addEventListener('click',init)
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -37,6 +37,11 @@ function init(): void {
   winner = false;
   tie = false ;
   render()
+}
+function render(): void {
+  updateBoard()
+  messageEls!.classList.remove('animate__animated', 'animate__heartBeat')
+  updateMessage()
 }
 function placePiece(idx: number): void {
   board[idx] = turn
@@ -64,32 +69,20 @@ function updateMessage(): void {
   }
   messageEls!.classList.add('animate__animated', 'animate__heartBeat')
 }
-// I HAVE NO IDEA HOW TO DO THIS 
-// function handleClick(evt: MouseEvent): void {
-//   const target = evt.target as HTMLElement
-//   if (!target) return
+// I HAVE NO IDEA HOW TO DO THIS //Figured it out
+function handleClick(evt: MouseEvent): void {
+  const target = evt.target as HTMLElement
+  if (!target) return
 
-//   const sqIdx: number = parseInt(target.id.replace('sq', ''))
-//   if (isNaN(sqIdx) || board[sqIdx] || winner) return
-//   placePiece(sqIdx)
-//   checkForTie()
-//   checkForWinner()
-//   switchPlayerTurn()
-//   render()
-// }
-function handleClick(evt) { // wants to explicty define it as MouseEvent idk
-  if (!evt.target)
-      return;
-  const target = evt.target;
-  const sqIdx = parseInt(target.id.replace('sq', ''));
-  if (isNaN(sqIdx) || board[sqIdx] || winner)
-      return;
-  placePiece(sqIdx);
-  checkForTie();
-  checkForWinner();
-  switchPlayerTurn();
-  render();
+  const sqrIdx: number = parseInt(target.id.replace('sqr', ''))
+  if (isNaN(sqrIdx) || board[sqrIdx] || winner) return
+  placePiece(sqrIdx)
+  checkForTie()
+  checkForWinner()
+  switchPlayerTurn()
+  render()
 }
+
 
 function checkForTie(): void {
   if (board.includes(0)) return
@@ -106,10 +99,4 @@ function checkForWinner(): void {
 function switchPlayerTurn(): void {
   if (winner) return 
   turn *= -1
-}
-
-function render(): void {
-  updateBoard()
-  messageEls!.classList.remove('animate__animated', 'animate__heartBeat')
-  updateMessage()
 }
