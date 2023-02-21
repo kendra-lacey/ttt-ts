@@ -22,3 +22,74 @@ const messageEls = document.getElementById('message')
 const resetBtnEl = document.querySelector<HTMLButtonElement>('#reset')!
 
 /*----------------------------- Event Listeners -----------------------------*/
+document.querySelector('.board')?.addEventListener('click', handleClick)
+resetBtnEl?.addEventListener('click',init)
+
+/*-------------------------------- Functions --------------------------------*/
+
+function init(): void {
+  board = [0,0,0,0,0,0,0,0,0,];
+  turn = 1;
+  winner = false;
+  tie = false ;
+  render()
+}
+
+
+function updateBoard(){
+  board.forEach((boardVal: number | null, idx: number) => {
+    if (boardVal === 1) {
+      squareEls[idx].textContent = '🐈'
+    } else if (boardVal === -1) {
+      squareEls[idx].textContent = '🐈‍⬛'
+    } else {
+      squareEls[idx].textContent = ''
+    }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function render(): void {
+  // updateBoard()
+  // messageEl.classList.remove('animate__animated', 'animate__heartBeat')
+  // updateMessage()
+}
