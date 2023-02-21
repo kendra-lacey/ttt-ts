@@ -10,3 +10,7 @@ const winningCombos = [
     [0, 4, 8],
     [2, 4, 6], //R-L diagonal
 ];
+/*---------------------------- Variables (state) ----------------------------*/
+//  Define the required variables used to track the state of the game
+let board, turn, winner, tie;
+/*------------------------ Cached Element References ------------------------*/
