@@ -17,8 +17,9 @@ let board, turn, winner, tie;
 const squareEls = document.querySelectorAll('.sqr');
 const messageEls = document.getElementById('message');
 const resetBtnEl = document.querySelector('#reset');
+const gameBoard = document.querySelector('.board');
 /*----------------------------- Event Listeners -----------------------------*/
-document.querySelector('.board')?.addEventListener('click', handleClick);
+gameBoard?.addEventListener('click', handleClick);
 resetBtnEl?.addEventListener('click', init);
 /*-------------------------------- Functions --------------------------------*/
 function init() {
@@ -27,6 +28,9 @@ function init() {
     winner = false;
     tie = false;
     render();
+}
+function placePiece(idx) {
+    board[idx] = turn;
 }
 function updateBoard() {
     board.forEach((boardVal, idx) => {
@@ -41,8 +45,62 @@ function updateBoard() {
         }
     });
 }
+function updateMessage() {
+    if (!winner && !tie) {
+        messageEls.textContent = `It's ${turn === 1 ? "🐈" : "🐈‍⬛"}'s turn!`;
+    }
+    else if (!winner && tie) {
+        messageEls.textContent = 'Tie Game aka cats game Mee-OWW 😸';
+    }
+    else {
+        messageEls.textContent = `Congratulations! ${turn === 1 ? '🐈' : '🐈‍⬛'} wins! `;
+    }
+    messageEls.classList.add('animate__animated', 'animate__heartBeat');
+}
+// I HAVE NO IDEA HOW TO DO THIS 
+// function handleClick(evt: MouseEvent): void {
+//   const target = evt.target as HTMLElement
+//   if (!target) return
+//   const sqIdx: number = parseInt(target.id.replace('sq', ''))
+//   if (isNaN(sqIdx) || board[sqIdx] || winner) return
+//   placePiece(sqIdx)
+//   checkForTie()
+//   checkForWinner()
+//   switchPlayerTurn()
+//   render()
+// }
+function handleClick(evt) {
+    if (!evt.target)
+        return;
+    const target = evt.target;
+    const sqIdx = parseInt(target.id.replace('sq', ''));
+    if (isNaN(sqIdx) || board[sqIdx] || winner)
+        return;
+    placePiece(sqIdx);
+    checkForTie();
+    checkForWinner();
+    switchPlayerTurn();
+    render();
+}
+function checkForTie() {
+    if (board.includes(0))
+        return;
+    tie = true;
+}
+function checkForWinner() {
+    winningCombos.forEach(combo => {
+        if (Math.abs(board[combo[1]] + board[combo[2]]) === 3) {
+            winner = true;
+        }
+    });
+}
+function switchPlayerTurn() {
+    if (winner)
+        return;
+    turn *= -1;
+}
 function render() {
-    // updateBoard()
-    // messageEl.classList.remove('animate__animated', 'animate__heartBeat')
-    // updateMessage()
+    updateBoard();
+    messageEls.classList.remove('animate__animated', 'animate__heartBeat');
+    updateMessage();
 }

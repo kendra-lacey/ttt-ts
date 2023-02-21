@@ -13,16 +13,20 @@ const winningCombos: number [][] = [
 
 /*---------------------------- Variables (state) ----------------------------*/
 //  Define the required variables used to track the state of the game
-let board: Array<number | null>, turn: number, winner: boolean ,tie: boolean
+let board: Array<number>,
+turn: number, 
+winner: boolean,
+tie: boolean
 
 /*------------------------ Cached Element References ------------------------*/
 
 const squareEls = document.querySelectorAll('.sqr')
 const messageEls = document.getElementById('message')
 const resetBtnEl = document.querySelector<HTMLButtonElement>('#reset')!
+const gameBoard = document.querySelector('.board')
 
 /*----------------------------- Event Listeners -----------------------------*/
-document.querySelector('.board')?.addEventListener('click', handleClick)
+gameBoard?.addEventListener('click', handleClick)
 resetBtnEl?.addEventListener('click',init)
 
 /*-------------------------------- Functions --------------------------------*/
@@ -34,10 +38,12 @@ function init(): void {
   tie = false ;
   render()
 }
-
+function placePiece(idx: number): void {
+  board[idx] = turn
+}
 
 function updateBoard(){
-  board.forEach((boardVal: number | null, idx: number) => {
+  board.forEach((boardVal: number , idx: number) => {
     if (boardVal === 1) {
       squareEls[idx].textContent = '🐈'
     } else if (boardVal === -1) {
@@ -48,48 +54,62 @@ function updateBoard(){
   })
 }
 
+function updateMessage(): void {
+  if(!winner && !tie){
+    messageEls!.textContent = `It's ${turn === 1 ? "🐈":"🐈‍⬛"}'s turn!`
+  } else if (!winner && tie) {
+    messageEls!.textContent = 'Tie Game aka cats game Mee-OWW 😸'
+  } else {
+    messageEls!.textContent =  `Congratulations! ${turn === 1 ? '🐈' : '🐈‍⬛'} wins! `
+  }
+  messageEls!.classList.add('animate__animated', 'animate__heartBeat')
+}
+// I HAVE NO IDEA HOW TO DO THIS 
+// function handleClick(evt: MouseEvent): void {
+//   const target = evt.target as HTMLElement
+//   if (!target) return
 
+//   const sqIdx: number = parseInt(target.id.replace('sq', ''))
+//   if (isNaN(sqIdx) || board[sqIdx] || winner) return
+//   placePiece(sqIdx)
+//   checkForTie()
+//   checkForWinner()
+//   switchPlayerTurn()
+//   render()
+// }
+function handleClick(evt) { // wants to explicty define it as MouseEvent idk
+  if (!evt.target)
+      return;
+  const target = evt.target;
+  const sqIdx = parseInt(target.id.replace('sq', ''));
+  if (isNaN(sqIdx) || board[sqIdx] || winner)
+      return;
+  placePiece(sqIdx);
+  checkForTie();
+  checkForWinner();
+  switchPlayerTurn();
+  render();
+}
 
+function checkForTie(): void {
+  if (board.includes(0)) return
+  tie = true
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function checkForWinner(): void {
+  winningCombos.forEach(combo => {
+    if (Math.abs(board[combo[1]] + board[combo[2]]) === 3){
+      winner = true
+    }
+  })
+}
+function switchPlayerTurn(): void {
+  if (winner) return 
+  turn *= -1
+}
 
 function render(): void {
-  // updateBoard()
-  // messageEl.classList.remove('animate__animated', 'animate__heartBeat')
-  // updateMessage()
+  updateBoard()
+  messageEls!.classList.remove('animate__animated', 'animate__heartBeat')
+  updateMessage()
 }
